@@ -91,7 +91,7 @@ def main():
     ##################
     # INITIALIZATION #
     ga = GeneticAlgorithm(objective_function=objfunction,
-                          population_size=100,
+                          population_size=10,
                           chromosome_size=4,
                           gene_bounds=(-100.01, 100.01),
                           mutation_probability=0.2,
@@ -147,7 +147,7 @@ def main():
 
     inverted_pendulum.K = K_sol
     inverted_pendulum.calculate()
-    inverted_pendulum.plot(animate=False, save=False)
+    inverted_pendulum.plot(animate=False, save=True)
 
 
 if __name__ == '__main__':
