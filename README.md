@@ -1,4 +1,4 @@
-# Inverted pendulum control using genetic algorithm
+# INVERTED PENDULUM CONTROL USING GENETIC ALGORITHM
 ## Welcome!
 
 This is a project implementing a genetic algorithm to determine parameters of an inverted pendulum controller.
