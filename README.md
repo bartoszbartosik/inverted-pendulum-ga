@@ -55,7 +55,7 @@ Parameters:
 - gene bounds: (-100.01, 100.01),
 - mutation probability: 0.2,
 - crossover probability: 0.4,
-- crossover rate: 0.2)
+- crossover rate: 0.2.
 
 Objective function is to minimise an integral of a difference between position and a reference position over time which is then multiplied by squared simulation time.
 
