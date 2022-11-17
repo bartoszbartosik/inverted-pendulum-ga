@@ -46,7 +46,7 @@ Animation below shows how does the LQR controller manage to stabilize the system
 
 <p align="center"><img src="anims/anim_LQR.gif" width="750" class="center"/></p>
 
-Looks pretty cool, as we could expect. Let's go to Player 2...
+Looks pretty cool, as we could expect. It bases on mathematical derivations after all. Let's go to Player 2...
 
 ## Genetic algorithm based controller
 Parameters:
