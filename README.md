@@ -2,9 +2,9 @@
 ## Welcome!
 
 This is a project implementing a genetic algorithm to determine parameters of an inverted pendulum controller.
-In other words - the point is to keep inverted pendulum in a vertical upright position without knowing its mathematical principles.
+In other words - **the point is to keep inverted pendulum in a vertical upright position without knowing maths and physics behind it.**
 
-The main.py file is the main file which you can execute in order to start a simulation and which contains basic system configuration
+The **main.py** file is the main file which you can execute in order to start a simulation and which contains basic system configuration
 where you can choose some inverted pendulum parameters as well as genetic algorithm's ones.
 You can also choose LQR controller in order to compare it with genetic algorithm controller.
 
@@ -41,7 +41,7 @@ Let's check how would this system behave inside a rocket traveling through space
 Ok, everything is set up, so let the fight begin!
 Player 1 is...
 
-## LQR controller!
+## LQR based controller
 Animation below shows how does the LQR controller manage to stabilize the system:
 
 <p align="center"><img src="anims/anim_LQR.gif" width="750" class="center"/></p>
