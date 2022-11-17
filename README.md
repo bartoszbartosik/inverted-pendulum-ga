@@ -67,18 +67,18 @@ the less likely to survive is the given individual causing pendulum to fall. ~~T
 The fittest individual of 100 generations:
 <p align="center"><img src="anims/anim_sample_GA.gif" width="750" class="center"/></p>
 
-## Conclusions
+# Conclusions
 Seems like LQR wins the battle. But is it so in every scenario? How about varying friction? Varying masses? Random forces acting on a cart? These questions and related to them doubts will be cleared soon.
 
 For now, as a bonus, check out how the evolution process looked like:
 
-## Bonus - evolution process
-<p align="center"> **GENERATION 1** <br> <img src="anims/anim_sample_GA_1.gif" width="600" class="center"/></p>
-<p align="center"> **GENERATION 5** <br> <img src="anims/anim_sample_GA_5.gif" width="600" class="center"/></p>
-<p align="center"> **GENERATION 10** <br> <img src="anims/anim_sample_GA_10.gif" width="600" class="center"/></p>
-<p align="center"> **GENERATION 20** <br> <img src="anims/anim_sample_GA_20.gif" width="600" class="center"/></p>
-<p align="center"> **GENERATION 50** <br> <img src="anims/anim_sample_GA_50.gif" width="600" class="center"/></p>
-<p align="center"> **GENERATION 75** <br> <img src="anims/anim_sample_GA_75.gif" width="600" class="center"/></p>
+# Bonus - evolution process
+<p align="center"> -- GENERATION 1 -- <br> <img src="anims/anim_sample_GA_1.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 5 -- <br> <img src="anims/anim_sample_GA_5.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 10 -- <br> <img src="anims/anim_sample_GA_10.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 20 -- <br> <img src="anims/anim_sample_GA_20.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 50 -- <br> <img src="anims/anim_sample_GA_50.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 75 -- <br> <img src="anims/anim_sample_GA_75.gif" width="600" class="center"/></p>
 
 
 
