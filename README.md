@@ -1,5 +1,5 @@
 # inverted-pendulum-ga
-Welcome!
+## Welcome!
 
 This is a project implementing a genetic algorithm to determine parameters of an inverted pendulum controller.
 In other words - the point is to keep inverted pendulum in a vertical upright position without knowing its mathematical principles.
