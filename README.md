@@ -13,7 +13,7 @@ Ok, but let's see how does it actually work.
 # System control
 Let's compare how does the genetic algorithm do its job in comparison to based on mathematical derivations LQR controller.
 
-For that purpose, let's create some simulation's scenario:
+For that purpose, let's create some simulation scenario:
 
 - Initial conditions:
   - position: 4 m,
