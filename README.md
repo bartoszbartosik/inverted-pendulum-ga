@@ -1,4 +1,4 @@
-# inverted-pendulum-ga
+# Inverted pendulum control using genetic algorithm
 ## Welcome!
 
 This is a project implementing a genetic algorithm to determine parameters of an inverted pendulum controller.
