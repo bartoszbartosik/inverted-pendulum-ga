@@ -129,6 +129,8 @@ class InvertedPendulum:
         self.t = sol.t
         self.solution = sol.y
 
+        return self.t, self.solution
+
     # GET ANGULAR POSITION INTEGRAL OVER TIME
     def get_theta_integral(self):
 
@@ -180,7 +182,7 @@ class InvertedPendulum:
         return sum
 
     # VISUALIZE SIMULATION ON A GRAPH
-    def plot(self, animate, save):
+    def plot(self, animate, save, filename=None, reference_solution=None):
 
         # ASSIGN SELF.SOLUTION AND SELF.L AS LOCAL VARIABLES
         solution = self.solution
@@ -206,6 +208,26 @@ class InvertedPendulum:
 
         self.xlim = (x_pos[0] - L * 1.25, x_pos[0] + L * 1.25)
         ylim = (-L * 1.25, L * 1.25)
+
+        # IF REFERENCE SOLUTION EXISTS
+        if reference_solution:
+            # REFERENCE TIME
+            ref_t = reference_solution[0]
+
+            # GET PENDULUM'S ANGLE
+            ref_ths = reference_solution[1][0]  # [rad]
+            ref_thsdeg = [rad * 180.0 / pi for rad in ref_ths]  # [deg]
+
+            # GET PENDULUM'S ANGULAR VELOCITY
+            ref_dths = reference_solution[1][1]  # [rad/s]
+            ref_dthsdeg = [rad * 180.0 / pi for rad in ref_dths]  # [deg/s]
+
+            # GET PENDULUM'S POSITION
+            ref_xs = reference_solution[1][2]  # [m]
+
+            # GET PENDULUM'S VELOCITY
+            ref_dxs = reference_solution[1][3]  # [m/s]
+
 
         # IF ANIMATE IS TRUE, VISUALISE PENDULUM'S MOVEMENT IN X-Y COORDINATE SYSTEM
         if animate:
@@ -346,16 +368,19 @@ class InvertedPendulum:
 
             # IF SAVE IS TRUE
             if save:
+                # IF FILE NAME IS NONE
+                if filename is None:
+                    filename = "anim"
+
                 # SAVE ANIMATION AS GIF
                 writergif = animation.PillowWriter(fps=len(self.t)/self.t[-1])
-                anim.save("anims/anim.gif", writer=writergif)
+                anim.save("anims/{}.gif".format(filename), writer=writergif)
             else:
                 # SHOW THE PLOT IN A WINDOW
                 plt.show()
 
         # IF ANIMATION IS FALSE
         else:
-
             # DEFINE 4x1 [rows x columns] SUBPLOTS GRID
             gs = gridspec.GridSpec(4, 1, width_ratios=[1],
                                    height_ratios=[1, 1, 1, 1])
@@ -371,7 +396,8 @@ class InvertedPendulum:
             axth.set_ylabel('\u03B8 [\N{DEGREE SIGN}]')
             axth.plot(self.t, thsdeg, '-', color='0.3', lw=3)
             # Plot theta reference
-            axth.plot([0, self.t_max], [0, 0], '--', color='0.3', lw=1)
+            axth.plot([0, self.t_max], [0, 0], '--', color='0.3', lw=1, label="reference")
+            axth.legend()
 
             # CREATE POSITION SUBPLOT
             axx = fig.add_subplot(gs[1, 0])
@@ -389,7 +415,8 @@ class InvertedPendulum:
             x_ref = []
             x_ref.extend([[self.x_ref[1][i], self.x_ref[1][i]] for i in range(len(self.x_ref[1]))])
             x_ref = list(itertools.chain.from_iterable(x_ref))
-            axx.plot(t_ref, x_ref, '--', color='0.3', lw=1)
+            axx.plot(t_ref, x_ref, '--', color='0.3', lw=1, label="reference")
+            axx.legend()
 
             # CREATE ANGULAR VELOCITY SUBPLOT
             axdth = fig.add_subplot(gs[2, 0])
@@ -407,10 +434,24 @@ class InvertedPendulum:
             axdx.set_ylabel('v [m/s]')
             axdx.plot(self.t, dxs, '-', color='0.3', lw=3)
 
+            # IF REFERENCE SOLUTION IS GIVEN
+            if reference_solution:
+                axth.plot(ref_t, ref_thsdeg, '--', color='red', lw=1.5, label="LQR")
+                axth.legend()
+                axdth.plot(ref_t, ref_dths, '--', color='red', lw=1.5, label="LQR")
+                axdth.legend()
+                axx.plot(ref_t, ref_xs, '--', color='red', lw=1.5, label="LQR")
+                axx.legend()
+                axdx.plot(ref_t, ref_dxs, '--', color='red', lw=1.5, label="LQR")
+                axdx.legend()
+
             # IF SAVE IS TRUE
             if save:
+                # IF FILE NAME IS NONE
+                if filename is None:
+                    filename = "plot"
                 # SAVE FIGURE TO A FILE
-                plt.savefig('plots/plot.png')
+                plt.savefig('plots/{}.png'.format(filename))
             else:
                 # SHOW THE PLOT IN A WINDOW
                 plt.show()

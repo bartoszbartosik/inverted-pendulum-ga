@@ -43,14 +43,16 @@ class GeneticAlgorithm:
 
         return self.individuals[self.values.index(max(self.values))].chromosome
 
-    def plot(self):
+    def plot(self, save, filename):
         plt.plot(self.iterations, self.values, '-', color='0.3', lw=3)
         plt.xlim(0, self.iteration)
         plt.ylim(min(self.values), max(self.values))
         plt.xlabel('GENERATION')
         plt.ylabel('FITNESS')
         plt.grid()
-        plt.draw()
+        if save:
+            plt.savefig('plots/{}.png'.format(filename))
+        plt.plot()
 
     def __compute(self):
 

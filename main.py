@@ -1,3 +1,5 @@
+import argparse
+
 from inverted_pendulum import InvertedPendulum
 from geneticalgorithm import GeneticAlgorithm
 from geneticalgorithm import StopCondition
@@ -31,8 +33,12 @@ def main():
     ######################
     # INITIAL CONDITIONS #
     th = 30.0      # [deg]
+    dth = 100.0     # [deg/s]
+    x = 3.0       # [m]
+    dx = -2.0     # [m/s]
+    th = 15.0      # [deg]
     dth = 0.0     # [deg/s]
-    x = 4.0       # [m]
+    x = 0.0       # [m]
     dx = 0.0     # [m/s]
 
     # State vector
@@ -47,10 +53,10 @@ def main():
 
     # Desired position
     x_pos = [
-        [5, 10, t_max],     # time [s]
-        [0, 0.8, -0.5]      # reference position [m]
-        # [0, t_max],     # time [s]
-        # [0, 0]      # reference position [m]
+        # [5, 10, t_max],     # time [s]
+        # [0, 1, -1]      # reference position [m]
+        [0, t_max],     # time [s]
+        [0, 0]      # reference position [m]
     ]
 
     ##################
@@ -69,36 +75,24 @@ def main():
 
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    ###########################
-    # GENETIC ALGORITHM SETUP #
-    ###########################
+    #####################
+    # SYSTEM SIMULATION #
+    #####################
 
-    ######################
-    # OBJECTIVE FUNCTION #
-    def objfunction(K):
+    #################
+    # PLOT SETTINGS #
+    animate_plot = True
+    save_plot = True
+    relative_path = ""
+    # relative_path = ""
+    filename = ""
 
-        inverted_pendulum.K = K
-        inverted_pendulum.calculate()
+    filenameprefix = "/state[{};{};{};{}]-".format(th, dth, x, dx)
 
-        correction_coeff = inverted_pendulum.t[-1]**2
-        # theta_integral = inverted_pendulum.get_theta_integral()
-        x_integral = inverted_pendulum.get_x_integral()
-        theta_integral = 1
-        # x_integral = 1
-
-        return correction_coeff*(1/(theta_integral*x_integral))
-
-    ##################
-    # INITIALIZATION #
-    ga = GeneticAlgorithm(objective_function=objfunction,
-                          population_size=10,
-                          chromosome_size=4,
-                          gene_bounds=(-100.01, 100.01),
-                          mutation_probability=0.2,
-                          crossover_probability=0.4,
-                          crossover_rate=0.2)
-
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    ##############
+    # CONTROLLER #
+    # Choose either 'LQR' or 'GA'
+    controller = 'LQR'
 
     ##############################
     # LINEAR QUADRATIC REGULATOR #
@@ -106,31 +100,78 @@ def main():
 
     ###########
     # WEIGHTS #
-    Q = np.diag([1700, 0, 100, 0])
+    Q = np.diag([2000, 0, 110, 0])
     R = 1
 
     ##################
     # INITIALIZATION #
     lqr = LQR4IP(inverted_pendulum, Q, R)
 
-    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-    #####################
-    # SYSTEM SIMULATION #
-    #####################
-
-    ##############
-    # CONTROLLER #
-    # Choose either 'LQR' or 'GA'
-    controller = 'LQR'
+    ########################
+    # REFERENCE CONTROLLER #
+    K_ref = lqr.K
 
     if controller.__eq__('LQR'):
-        K_sol = lqr.K
+        #######
+        # SET #
+        K_sol = K_ref
+
+        ####################
+        # PLOT NAME PREFIX #
+        filenameprefix += "lqr[{};{}]-k[{};{};{};{}]"\
+                              .format(str(Q[0][0]), str(Q[2][2]),
+                                      round(K_sol[0], 2), round(K_sol[1], 2), round(K_sol[2], 2), round(K_sol[3], 2))
+
     elif controller.__eq__('GA'):
+        ###############################
+        # GENETIC ALGORITHM REGULATOR #
+        ###############################
+
+        ######################
+        # OBJECTIVE FUNCTION #
+        def objfunction(K):
+
+            inverted_pendulum.K = K
+            inverted_pendulum.calculate()
+
+            correction_coeff = inverted_pendulum.t[-1]**2
+            # theta_integral = inverted_pendulum.get_theta_integral()
+            x_integral = inverted_pendulum.get_x_integral()
+            theta_integral = 1
+            # x_integral = 1
+
+            return correction_coeff*(1/(theta_integral*x_integral))
+
+        ##################
+        # INITIALIZATION #
+        ga = GeneticAlgorithm(objective_function=objfunction,
+                              population_size=20,
+                              chromosome_size=4,
+                              gene_bounds=(0, 100.01),
+                              mutation_probability=0.2,
+                              crossover_probability=0.4,
+                              crossover_rate=0.8)
+
         K_sol = ga.calculate(StopCondition.ITERATIONS, 100)
-        ga.plot()
+
+        ####################
+        # PLOT NAME PREFIX #
+        filenameprefix += "ga[psize{};mprob{};crossprob{};crossrate{}]-k[{};{};{};{}]"\
+            .format(ga.population.psize, ga.population.mprobability,
+                    ga.population.crossprobability, ga.population.crossrate,
+                    round(K_sol[0], 2), round(K_sol[1], 2), round(K_sol[2], 2), round(K_sol[3], 2))
+
+        ga.plot(save=save_plot, filename=relative_path+filenameprefix+filename+"-generations")
+
     else:
+        ################
+        # NO REGULATOR #
+        ################
         K_sol = [0, 0, 0, 0]
+
+        ####################
+        # PLOT NAME PREFIX #
+        filenameprefix += "nocontrol"
 
     ##############
     # SIMULATION #
@@ -145,9 +186,22 @@ def main():
     # K_sol = [83.72, 25.1, 10.98, 13.32]   # nice result
     # K_sol = [99.06222414, 23.29486085, 10.0, 13.66361755]   # LQR
 
+    # K_sol = [57.45, 91.77, -0.38, 65.55]    # 1
+    # K_sol = [76.88, 91.95, 2.92, 42.29]     # 5
+    # K_sol = [76.88, 91.95, 2.92, 28.24]     # 10
+    # K_sol = [98.07, 91.95, 17.17, 42.29]    # 20
+    # K_sol = [98.07, 73.16, 14.32, 38.19]    # 50
+    # K_sol = [98.07, 42.0, 13.78, 24.16]     # 75
+
+    ######################################
+    # SOLVE FOR REFERENCE LQR CONTROLLER #
+    # inverted_pendulum.K = K_ref
+    # ref_solution = inverted_pendulum.calculate()
+
     inverted_pendulum.K = K_sol
     inverted_pendulum.calculate()
-    inverted_pendulum.plot(animate=False, save=True)
+    inverted_pendulum.plot(animate=animate_plot, save=save_plot, filename=relative_path+filenameprefix+filename,
+                           reference_solution=None)
 
 
 if __name__ == '__main__':
