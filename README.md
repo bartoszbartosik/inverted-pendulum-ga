@@ -1,4 +1,4 @@
-# inverted-pendulum-ga
+# INVERTED PENDULUM CONTROL USING GENETIC ALGORITHM
 ## Welcome!
 
 This is a project implementing a genetic algorithm to determine parameters of an inverted pendulum controller.
@@ -38,7 +38,7 @@ For that purpose, let's create some simulation scenario:
  
 Let's check how would this system behave inside a rocket traveling through space with a constant acceleration of g = 9.81 m/s^2.
 
-Ok, everything is set up, so let the fight begin!
+Ok, everything is set up, so let the battle begin!
 Player 1 is...
 
 ## LQR based controller
@@ -55,7 +55,7 @@ Parameters:
 - gene bounds: (-100.01, 100.01),
 - mutation probability: 0.2,
 - crossover probability: 0.4,
-- crossover rate: 0.2)
+- crossover rate: 0.2.
 
 Objective function is to minimise an integral of a difference between position and a reference position over time which is then multiplied by squared simulation time.
 
@@ -64,6 +64,21 @@ Because simulation is terminated every time when pendulum's angle exceeds 90 deg
 the less the simulation time. The less the simulation time, the less the value of objective function defined above. The less the value of objective function,
 the less likely to survive is the given individual causing pendulum to fall. ~~The less likely the given~~ ok let's finally check out how this stuff works.
 
+The fittest individual of 100 generations:
+<p align="center"><img src="anims/anim_sample_GA.gif" width="750" class="center"/></p>
+
+# Conclusions
+Seems like LQR wins the battle. But is it so in every scenario? How about varying friction? Varying masses? Random forces acting on a cart? These questions and related to them doubts will be cleared soon.
+
+For now, as a bonus, check out how the evolution process looked like:
+
+# Bonus - evolution process
+<p align="center"> -- GENERATION 1 -- <br> <img src="anims/anim_sample_GA_1.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 5 -- <br> <img src="anims/anim_sample_GA_5.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 10 -- <br> <img src="anims/anim_sample_GA_10.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 20 -- <br> <img src="anims/anim_sample_GA_20.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 50 -- <br> <img src="anims/anim_sample_GA_50.gif" width="600" class="center"/></p>
+<p align="center"> -- GENERATION 75 -- <br> <img src="anims/anim_sample_GA_75.gif" width="600" class="center"/></p>
 
 
 
