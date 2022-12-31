@@ -30,10 +30,10 @@ def main():
     g = -9.81   # [m/s^2]
 
     # PHYSICAL VARIABLES #
-    # b = [
-    #     [-180, -5, 1, 180],     # angle [deg]
-    #     [0.05, 0.05, 0.5, 0.05]          # friction [-]
-    # ]
+    b = [
+        [-180, -5, 1, 180],     # angle [deg]
+        [0.05, 0.05, 0.075, 0.05]          # friction [-]
+    ]
 
     # B = [
     #     [-2, -1.2, -0.8, 0, 1, 1.5, 5],     # position [m]
@@ -57,14 +57,10 @@ def main():
 
     ######################
     # INITIAL CONDITIONS #
-    # th = 30.0      # [deg]
-    # dth = 100.0     # [deg/s]
-    # x = 3.0       # [m]
-    # dx = -2.0     # [m/s]
-    th = 15.0      # [deg]
-    dth = 0.0     # [deg/s]
-    x = .0       # [m]
-    dx = .0     # [m/s]
+    th = 30.0      # [deg]
+    dth = 100.0     # [deg/s]
+    x = 3.0       # [m]
+    dx = -2.0     # [m/s]
 
     # State vector
     state = np.array([th, dth, x, dx])
@@ -78,10 +74,10 @@ def main():
 
     # Desired position
     x_pos = [
-        # [5, 10, t_max],     # time [s]
-        # [0, 1, -1]      # reference position [m]
-        [0, t_max],     # time [s]
-        [0, 0]      # reference position [m]
+        [5, 10, t_max],     # time [s]
+        [0, 1, -1]      # reference position [m]
+        # [0, t_max],     # time [s]
+        # [0, 0]      # reference position [m]
     ]
 
     ##################
@@ -107,7 +103,7 @@ def main():
     #################
     # PLOT SETTINGS #
     animate_plot = True
-    relative_path = "freefall"
+    relative_path = "alternative scenarios/var pendulums friction"
     filename = "-animation"
 
     filenameprefix = "/state[{};{};{};{}]-".format(th, dth, x, dx)
@@ -115,7 +111,7 @@ def main():
     ##############
     # CONTROLLER #
     # Choose either 'LQR' or 'GA'
-    controller = 'LQRs'
+    controller = 'LQR'
 
     ##############################
     # LINEAR QUADRATIC REGULATOR #
@@ -282,9 +278,6 @@ def main():
     plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
                                  animate=animate_plot,
                                  filename=relative_path+filenameprefix+filename)
-
-    plots.plot_x_integral(inverted_pendulum=inverted_pendulum, filename=relative_path+filenameprefix+filename)
-    plots.plot_theta_integral(inverted_pendulum=inverted_pendulum, filename=relative_path+filenameprefix+filename)
 
 
 
