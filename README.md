@@ -62,23 +62,58 @@ Objective function is to minimise an integral of a difference between position a
 Why won't we include integral of a pendulum's angle to ensure staying in upright postion?
 Because simulation is terminated every time when pendulum's angle exceeds 90 degrees. The quicker it does so,
 the less the simulation time. The less the simulation time, the less the value of objective function defined above. The less the value of objective function,
-the less likely to survive is the given individual causing pendulum to fall. ~~The less likely the given~~ ok let's finally check out how this stuff works.
+the less likely to survive is the given individual causing pendulum to fall. ~~The less likely the given~~ ok let's finally check out how does this stuff work.
 
 The fittest individual of 100 generations:
 <p align="center"><img src="anims/anim_sample_GA.gif" width="750" class="center"/></p>
 
-# Conclusions
-Seems like LQR wins the battle. But is it so in every scenario? How about varying friction? Varying masses? Random forces acting on a cart? These questions and related to them doubts will be cleared soon.
+## Conclusions
+Seems like LQR wins the battle as it stabilizes the system quicker. But is it so in every scenario? How about varying friction? Varying masses? The LQR controller concept is about linearization of the inverted pendulum mathematical model. If we add to the model more non-linearities (by changing assumed as constant physical properties mentioned earlier to varying), we will be able to observe how linearized model differs from the "realistic" one.
 
-For now, as a bonus, check out how the evolution process looked like:
+# Non-linear system control
+## Varying pendulum's friction
+Let's start with the pendulum friction. We defined its value before as 0.05. But in the reality it is not constant over the whole angular range within which pendulum can rotate. From the realistic example we could expect the friction to be greater at some points and less at the others. Let's arbitrary define its change with respect to the angular position of the pendulum as on the graph showed below:
+<p align="center"><img src="plots/alternative scenarios/var pendulums friction/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[93.91;26.27;12.98;16.62]-friction.png" width="500" class="center"/></p>
 
-# Bonus - evolution process
-<p align="center"> -- GENERATION 1 -- <br> <img src="anims/anim_sample_GA_1.gif" width="600" class="center"/></p>
-<p align="center"> -- GENERATION 5 -- <br> <img src="anims/anim_sample_GA_5.gif" width="600" class="center"/></p>
-<p align="center"> -- GENERATION 10 -- <br> <img src="anims/anim_sample_GA_10.gif" width="600" class="center"/></p>
-<p align="center"> -- GENERATION 20 -- <br> <img src="anims/anim_sample_GA_20.gif" width="600" class="center"/></p>
-<p align="center"> -- GENERATION 50 -- <br> <img src="anims/anim_sample_GA_50.gif" width="600" class="center"/></p>
-<p align="center"> -- GENERATION 75 -- <br> <img src="anims/anim_sample_GA_75.gif" width="600" class="center"/></p>
+How does the LQR controller deal with this problem?
+<p align="center"><img src="anims/alternative scenarios/var pendulums friction/state[30.0;100.0;3.0;-2.0]-lqr[2000;110]-k[87.24;22.65;10.49;13.05]-animation.gif" width="500" class="center"/></p>
 
+And how does the genetic algorithm based controller do it?
+<p align="center"><img src="anims/alternative scenarios/var pendulums friction/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[93.91;26.27;12.98;16.62].gif" width="500" class="center"/></p>
 
+Differences are a little bit difficult to see, so let's put it both on one graph:
+<p align="center"><img src="plots/alternative scenarios/var pendulums friction/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[93.91;26.27;12.98;16.62].png" width="500" class="center"/></p>
+
+Looks like this time it was super easy for genetic algorithm to catch up with the LQR controller.
+Let's move on with other non-linearity scenarios.
+
+## Varying cart's friction
+Again, we arbitrary define friction change over the cart's position
+<p align="center"><img src="plots/alternative scenarios/var carts friction/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[84.82;26.07;12.7;15.06]-cart_friction.png" width="500" class="center"/></p>
+
+The LQR controller:
+<p align="center"><img src="anims/alternative scenarios/var carts friction/state[30.0;100.0;3.0;-2.0]-lqr[2000;110]-k[93.74;23.0;10.49;15.06]-animation.gif" width="500" class="center"/></p>
+
+The genetic algorithm based controller:
+<p align="center"><img src="anims/alternative scenarios/var carts friction/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[84.82;26.07;12.7;15.06].gif" width="500" class="center"/></p>
+
+All together put on one graph:
+<p align="center"><img src="plots/alternative scenarios/var carts friction/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[84.82;26.07;12.7;15.06].png" width="500" class="center"/></p>
+
+This is a revolutionary moment for all of those who associate with the Team Genetic Algorithm - the graph above clearly shows it has managed to stabilize the pendulum quicker than the LQR controller.
+
+## Varying pendulum's mass
+Finally, let's investigate an impact of varying in time pendulum's mass on control conditions.
+<p align="center"><img src="plots/alternative scenarios/var pendulums mass/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[92.49;29.5;9.35;16.26]-pendulum_mass.png" width="500" class="center"/></p>
+
+The LQR controller:
+<p align="center"><img src="anims/alternative scenarios/var pendulums mass/state[30.0;100.0;3.0;-2.0]-lqr[2000;110]-k[268.89;69.5;10.49;19.7]-animation.gif" width="500" class="center"/></p>
+
+The genetic algorithm based controller:
+<p align="center"><img src="anims/alternative scenarios/var pendulums mass/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[92.49;29.5;9.35;16.26].gif" width="500" class="center"/></p>
+
+All together put on one graph:
+<p align="center"><img src="plots/alternative scenarios/var pendulums mass/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[92.49;29.5;9.35;16.26].png" width="500" class="center"/></p>
+
+Here the advantage of genetic algorithm based controller is even more visible.
 
