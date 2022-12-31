@@ -13,9 +13,19 @@ class LQR4IP:
         m = inverted_pendulum.m
         b = inverted_pendulum.b
 
+        if hasattr(b, '__len__'):
+            b = (max(b[0])+min(b[0]))/2
+
+
+        if hasattr(m, '__len__'):
+            m = (max(m[0])+min(m[0]))/2
+
         # Cart
         M = inverted_pendulum.M
         B = inverted_pendulum.B
+
+        if hasattr(B, '__len__'):
+            B = (max(B[0])+min(B[0]))/2
 
         # Gravitational acceleration
         g = inverted_pendulum.g

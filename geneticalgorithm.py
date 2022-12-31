@@ -1,7 +1,6 @@
 from enum import Enum
 
 from population import Population
-import matplotlib.pyplot as plt
 
 
 class StopCondition(Enum):
@@ -29,7 +28,7 @@ class GeneticAlgorithm:
         self.individuals = []
         self.values = []
 
-    def calculate(self, stop_condition, stop_value):
+    def calculate(self, stop_condition, stop_value, save):
 
         if stop_condition == StopCondition.ITERATIONS:
             for i in range(stop_value):
@@ -41,18 +40,15 @@ class GeneticAlgorithm:
         print("SOLUTION: {}".format(self.individuals[self.values.index(max(self.values))].chromosome))
         print("VALUE: {}".format(max(self.values)))
 
-        return self.individuals[self.values.index(max(self.values))].chromosome
-
-    def plot(self, save, filename):
-        plt.plot(self.iterations, self.values, '-', color='0.3', lw=3)
-        plt.xlim(0, self.iteration)
-        plt.ylim(min(self.values), max(self.values))
-        plt.xlabel('GENERATION')
-        plt.ylabel('FITNESS')
-        plt.grid()
         if save:
-            plt.savefig('plots/{}.png'.format(filename))
-        plt.plot()
+            file = open('results/ga.txt', 'a')
+            file.write('\nParameters: [psize: {}; mprob: {}; crossprob: {}; crossrate: {}]'
+                       .format(self.population.psize, self.population.mprobability, self.population.crossprobability,
+                               self.population.crossrate))
+            file.write('\niterations={}\nvalues={}\n'.format(self.iterations, self.values))
+            file.close()
+
+        return self.individuals[self.values.index(max(self.values))].chromosome
 
     def __compute(self):
 
