@@ -26,6 +26,7 @@ def main():
     M = 0.6     # [kg]
     B = 0.1     # [1/s]
 
+
     # Gravitational acceleration
     g = -9.81   # [m/s^2]
 
@@ -50,10 +51,10 @@ def main():
     #     [0.3, 0.25, 0.2, 0.3, 0.35, 0.3]  # mass [kg]
     # ]
 
-    # m = [
-    #     [2, 4, 8, 12, 15], # time [s]
-    #     [0.2, 0.3, 0.1, 0.5, 0.3]  # mass [kg]
-    # ]
+    m = [
+        [2, 4, 8, 12, 15], # time [s]
+        [0.2, 0.3, 0.1, 0.5, 0.3]  # mass [kg]
+    ]
 
     ######################
     # INITIAL CONDITIONS #
@@ -102,9 +103,9 @@ def main():
 
     #################
     # PLOT SETTINGS #
-    animate_plot = True
-    relative_path = "alternative scenarios/var pendulums friction"
-    filename = "-animation"
+    animate_plot = False
+    relative_path = "controller design/ga/var objective function"
+    filename = "-update"
 
     filenameprefix = "/state[{};{};{};{}]-".format(th, dth, x, dx)
 
@@ -119,7 +120,13 @@ def main():
 
     ###########
     # WEIGHTS #
-    Q = np.diag([2000, 0, 110, 0])
+    # Q = [
+    #   [   th,    0,      0,      0    ],
+    #   [   0,     dth,    0,      0    ],
+    #   [   0,     0,      x,      0    ],
+    #   [   0,     0,      0,      dx   ]
+    # ]
+    Q = np.diag([1, 100, 20000, 5000])
     R = 1
 
     ##################
@@ -137,11 +144,11 @@ def main():
 
         ####################
         # PLOT NAME PREFIX #
-        filenameprefix += "lqr[{};{}]-k[{};{};{};{}]"\
-                              .format(str(Q[0][0]), str(Q[2][2]),
+        filenameprefix += "lqr[{};{};{};{}]-k[{};{};{};{}]"\
+                              .format(str(Q[0][0]), str(Q[1][1]), str(Q[2][2]), str(Q[3][3]),
                                       round(K_sol[0], 2), round(K_sol[1], 2), round(K_sol[2], 2), round(K_sol[3], 2))
 
-    elif controller.__eq__('GAs'):
+    elif controller.__eq__('GA'):
         ###############################
         # GENETIC ALGORITHM REGULATOR #
         ###############################
@@ -166,7 +173,7 @@ def main():
         ga = GeneticAlgorithm(objective_function=objfunction,
                               population_size=20,
                               chromosome_size=4,
-                              gene_bounds=(0, 100.01),
+                              gene_bounds=(0, 1000),
                               mutation_probability=0.2,
                               crossover_probability=0.4,
                               crossover_rate=0.2)
@@ -175,9 +182,10 @@ def main():
 
         ####################
         # PLOT NAME PREFIX #
-        filenameprefix += "ga[psize{};mprob{};crossprob{};crossrate{}]-k[{};{};{};{}]" \
+        filenameprefix += "ga[psize{};mprob{};crossprob{};crossrate{};glower{};gupper{}]-k[{};{};{};{}]" \
             .format(ga.population.psize, ga.population.mprobability,
                     ga.population.crossprobability, ga.population.crossrate,
+                    ga.population.gbounds[0], ga.population.gbounds[1],
                     round(K_sol[0], 2), round(K_sol[1], 2), round(K_sol[2], 2), round(K_sol[3], 2))
 
         plots = Plots()
@@ -205,6 +213,7 @@ def main():
     # K_sol = [63.11, 18.3, 6.68, 9.35]   # nice result
     # K_sol = [83.72, 25.1, 10.98, 13.32]   # nice result
     # K_sol = [99.06222414, 23.29486085, 10.0, 13.66361755]   # LQR
+    # K_sol = [908.14, 269.05, 141.42, 169.24] # uber robust LQR
 
     # K_sol = [57.45, 91.77, -0.38, 65.55]    # 1
     # K_sol = [76.88, 91.95, 2.92, 42.29]     # 5
@@ -256,6 +265,8 @@ def main():
     # ref_ip4 = inverted_pendulum.copy()
     # ref_ip4.K = K_PS_50
 
+    K_sol = K_X
+
     inverted_pendulum.K = K_sol
     inverted_pendulum.calculate()
 
@@ -275,9 +286,12 @@ def main():
     #                              labels=['LQR'],
     #                              linestyles=['--'])
 
-    plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
-                                 animate=animate_plot,
-                                 filename=relative_path+filenameprefix+filename)
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename)
+
+    plots.plot_x_integral(inverted_pendulum=inverted_pendulum,
+                              filename=relative_path+filenameprefix+filename)
 
 
 

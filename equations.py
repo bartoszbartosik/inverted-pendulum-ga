@@ -49,27 +49,56 @@ def main():
 
     ddth = sympy.simplify(sol.get(ddth))
     ddx = sympy.simplify(sol.get(ddx))
+    print('NON-LINEAR:')
     print('ddtheta: {}'.format(ddth))
     print('ddx: {}'.format(ddx))
+    print('--------------')
 
     if linearize:
         ddth = parse_expr(str(ddth).\
             replace('cos(th)', '1').replace('dth**2', '0').replace('sin(2*th)', '2*th').replace('sin(th)', 'th'))
+        ddth = parse_expr(str(ddth).replace('th**2', '0'))
         ddx = parse_expr(str(ddx).\
             replace('cos(th)', '1').replace('dth**2', '0').replace('sin(2*th)', '2*th').replace('sin(th)', 'th'))
+        ddx = parse_expr(str(ddx).replace('th**2', '0'))
 
-        print('ddtheta: {}'.format(ddth))
-        print('ddx: {}'.format(ddx))
+        print('LINEARIZED:')
+        print('ddtheta: {}'.format(sympy.simplify(ddth)))
+        print('ddx: {}'.format(sympy.simplify(ddx)))
+        print('--------------')
 
-        a21 = float(ddth.coeff(th))
-        a22 = float(ddth.coeff(dth))
-        a24 = float(ddth.coeff(dx))
-        a41 = float(ddx.coeff(th))
-        a42 = float(ddx.coeff(dth))
-        a44 = float(ddx.coeff(dx))
+        if symbolic:
+            a21 = sympy.simplify(ddth.expand().coeff(th))
+            a22 = sympy.simplify(ddth.expand().coeff(dth))
+            a24 = sympy.simplify(ddth.expand().coeff(dx))
+            a41 = sympy.simplify(ddx.expand().coeff(th))
+            a42 = sympy.simplify(ddx.expand().coeff(dth))
+            a44 = sympy.simplify(ddx.expand().coeff(dx))
 
-        b2 = float(ddth.coeff(F))
-        b4 = float(ddx.coeff(F))
+            b2 = sympy.simplify(ddth.expand().coeff(F))
+            b4 = sympy.simplify(ddx.expand().coeff(F))
+        else:
+            a21_test = 2*L*g*m*(-M - m)/(L**2*M*m + 4*I*M + 4*I*m)
+            print('a21_test: {}'.format(a21_test))
+
+            a21 = float(ddth.coeff(th))
+            a22 = float(ddth.coeff(dth))
+            a24 = float(ddth.coeff(dx))
+            a41 = float(ddx.coeff(th))
+            a42 = float(ddx.coeff(dth))
+            a44 = float(ddx.coeff(dx))
+
+            b2 = float(ddth.coeff(F))
+            b4 = float(ddx.coeff(F))
+
+        print('a21: {}'.format(a21))
+        print('a22: {}'.format(a22))
+        print('a24: {}'.format(a24))
+        print('a41: {}'.format(a41))
+        print('a42: {}'.format(a42))
+        print('a44: {}'.format(a44))
+        print('b2: {}'.format(b2))
+        print('b4: {}'.format(b4))
 
         # x1 = dx
         # x2 = ddx

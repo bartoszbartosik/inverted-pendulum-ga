@@ -1,5 +1,3 @@
-import itertools
-
 import numpy as np
 
 from scipy import integrate
@@ -122,6 +120,7 @@ class InvertedPendulum:
         # Create timestamps array
         timestamps = self.m[0]
 
+
         # Create positions array
         masses = self.m[1]
 
@@ -187,7 +186,7 @@ class InvertedPendulum:
         # SIMULATION STOP CONDITION
         def limit(t, state):
             # If pendulum's angle is less than 90 deg, stop simulation
-            if abs(state[0]) > 4*pi/2:
+            if abs(state[0]) > pi/2:
                 state[0] = 0
                 return state[0]
             # Otherwise keep performing it
