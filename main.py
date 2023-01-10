@@ -31,10 +31,10 @@ def main():
     g = -9.81   # [m/s^2]
 
     # PHYSICAL VARIABLES #
-    b = [
-        [-180, -5, 1, 180],     # angle [deg]
-        [0.05, 0.05, 0.075, 0.05]          # friction [-]
-    ]
+    # b = [
+    #     [-180, -5, 1, 180],     # angle [deg]
+    #     [0.05, 0.05, 0.075, 0.05]          # friction [-]
+    # ]
 
     # B = [
     #     [-2, -1.2, -0.8, 0, 1, 1.5, 5],     # position [m]
@@ -51,10 +51,10 @@ def main():
     #     [0.3, 0.25, 0.2, 0.3, 0.35, 0.3]  # mass [kg]
     # ]
 
-    m = [
-        [2, 4, 8, 12, 15], # time [s]
-        [0.2, 0.3, 0.1, 0.5, 0.3]  # mass [kg]
-    ]
+    # m = [
+    #     [2, 4, 8, 12, 15], # time [s]
+    #     [0.2, 0.3, 0.1, 0.5, 0.3]  # mass [kg]
+    # ]
 
     ######################
     # INITIAL CONDITIONS #
@@ -104,8 +104,8 @@ def main():
     #################
     # PLOT SETTINGS #
     animate_plot = False
-    relative_path = "controller design/ga/var objective function"
-    filename = "-update"
+    relative_path = "controller design/ga/var population size"
+    filename = "-multiplot-update"
 
     filenameprefix = "/state[{};{};{};{}]-".format(th, dth, x, dx)
 
@@ -126,7 +126,7 @@ def main():
     #   [   0,     0,      x,      0    ],
     #   [   0,     0,      0,      dx   ]
     # ]
-    Q = np.diag([1, 100, 20000, 5000])
+    Q = np.diag([1, 100, 22500, 5000])
     R = 1
 
     ##################
@@ -229,10 +229,10 @@ def main():
     K_PS_50 = [55.69, 13.62, 5.36, 7.6]
 
     # VAR OBJECTIVE FUNCTION #
-    K_TH = [96.71, 24.68, -0.27, 17.62]
-    K_X = [-6.94, 10.53, -94.52, -64.39]
-    K_X_TH_DXLIM = [91.86, 46.94, 7.79, 28.22]
-    K_X_TH_THLIM = [99.51, 74.77, 11.75, 46.67]
+    K_TH            = [96.71, 24.68, -0.27, 17.62]
+    K_X             = [-6.94, 10.53, -94.52, -64.39]
+    K_X_TH_DXLIM    = [91.86, 46.94, 7.79, 28.22]
+    K_X_TH_THLIM    = [99.51, 74.77, 11.75, 46.67]
 
     # VAR MUTATION PROBABILITY #
     K_M01 = [91.13, 59.67, 13.03, 21.13]
@@ -252,31 +252,92 @@ def main():
     K_CR04 = [84.31, 24.19, 10.35, 13.73]
     K_CR08 = [93.41, 33.83, 4.71, 19.94]
 
+    # VAR GENE BOUNDARIES #
+    K_100_100_2 = [89.69, 18.35, 4.98, 11.29]
+    K_0_100_0   = [96.0, 40.0, 13.0, 22.0]
+    K_0_100_1   = [97.3, 47.5, 15.6, 21.6]
+    K_0_100_2   = [97.0, 53.04, 16.08, 28.23]
+    K_0_1000_0  = [776.0, 342.0, 165.0, 220.0]
+
+
     #######################################
     # CREATE REFERENCE INVERTED PENDULUMS #
     ref_ip_lqr = inverted_pendulum.copy()
     ref_ip_lqr.K = K_ref
-    # ref_ip1 = inverted_pendulum.copy()
-    # ref_ip1.K = K_PS_5
-    # ref_ip2 = inverted_pendulum.copy()
-    # ref_ip2.K = K_PS_10
-    # ref_ip3 = inverted_pendulum.copy()
-    # ref_ip3.K = K_PS_20
-    # ref_ip4 = inverted_pendulum.copy()
-    # ref_ip4.K = K_PS_50
-
-    K_sol = K_X
+    ref_ip1 = inverted_pendulum.copy()
+    ref_ip2 = inverted_pendulum.copy()
+    ref_ip3 = inverted_pendulum.copy()
+    ref_ip4 = inverted_pendulum.copy()
+    ref_ip1.K = K_TH
+    ref_ip2.K = K_X
+    ref_ip3.K = K_X_TH_DXLIM
+    ref_ip4.K = K_X_TH_THLIM
 
     inverted_pendulum.K = K_sol
     inverted_pendulum.calculate()
 
     plots = Plots()
 
+    # ref_ip1.K = K_TH
+    # ref_ip2.K = K_X
+    # ref_ip3.K = K_X_TH_DXLIM
+    # ref_ip4.K = K_X_TH_THLIM
+    # relative_path = "controller design/ga/var objective function"
     # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
     #                              animate=animate_plot,
     #                              filename=relative_path+filenameprefix+filename,
     #                              references=[ref_ip_lqr, ref_ip1, ref_ip2, ref_ip3, ref_ip4],
-    #                              labels=['LQR', 'PS: 5', 'PS: 10', 'PS: 20', 'PS: 50'],
+    #                              labels=['LQR', 'f\u2081', 'f\u2082', 'f\u2083', 'f\u2084'],
+    #                              linestyles=['--', '-', '-', '-', '-'])
+
+    ref_ip5 = inverted_pendulum.copy()
+    ref_ip1.K = K_100_100_2
+    ref_ip2.K = K_0_100_0
+    ref_ip3.K = K_0_100_1
+    ref_ip4.K = K_0_100_2
+    ref_ip5.K = K_0_1000_0
+    relative_path = "controller design/ga/var gene bounds"
+    plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+                                 animate=animate_plot,
+                                 filename=relative_path+filenameprefix+filename,
+                                 references=[ref_ip_lqr, ref_ip1, ref_ip2, ref_ip3, ref_ip4, ref_ip5],
+                                 labels=['LQR', '-100.00 : 100.00', '0 : 100', '0.0 : 100.0', '0.00 : 100.00', '0 : 1000'],
+                                 linestyles=['--', '-', '-', '-', '-', '-'])
+
+    # ref_ip1.K = K_M01
+    # ref_ip2.K = K_M02
+    # ref_ip3.K = K_M04
+    # ref_ip4.K = K_M08
+    # relative_path = "controller design/ga/var mutation probability"
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr, ref_ip1, ref_ip2, ref_ip3, ref_ip4],
+    #                              labels=['LQR', 'MP: 0.1', 'MP: 0.2', 'MP: 0.4', 'MP: 0.8'],
+    #                              linestyles=['--', '-', '-', '-', '-'])
+    #
+    # ref_ip1.K = K_CP01
+    # ref_ip2.K = K_CP02
+    # ref_ip3.K = K_CP04
+    # ref_ip4.K = K_CP08
+    # relative_path = "controller design/ga/var crossover probability"
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr, ref_ip1, ref_ip2, ref_ip3, ref_ip4],
+    #                              labels=['LQR', 'CP: 0.1', 'CP: 0.2', 'CP: 0.4', 'CP: 0.8'],
+    #                              linestyles=['--', '-', '-', '-', '-'])
+    #
+    # ref_ip1.K = K_CR01
+    # ref_ip2.K = K_CR02
+    # ref_ip3.K = K_CR04
+    # ref_ip4.K = K_CR08
+    # relative_path = "controller design/ga/var crossover rate"
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr, ref_ip1, ref_ip2, ref_ip3, ref_ip4],
+    #                              labels=['LQR', 'CR: 0.1', 'CR: 0.2', 'CR: 0.4', 'CR: 0.8'],
     #                              linestyles=['--', '-', '-', '-', '-'])
 
     # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
@@ -290,8 +351,11 @@ def main():
     #                              animate=animate_plot,
     #                              filename=relative_path+filenameprefix+filename)
 
-    plots.plot_x_integral(inverted_pendulum=inverted_pendulum,
-                              filename=relative_path+filenameprefix+filename)
+    # plots.plot_x_integral(inverted_pendulum=inverted_pendulum,
+    #                           filename=relative_path+filenameprefix+filename)
+
+    # plots.plot_theta_integral(inverted_pendulum=inverted_pendulum,
+    #                           filename=relative_path+filenameprefix+filename)
 
 
 

@@ -60,7 +60,8 @@ class Plots:
 
         # SET LINE'S APPEARANCE
         linestyle = '-'
-        linewidth = 3
+        linewidth = 0
+        # linewidth = 3
         color = '0.3'
         label=''
 
