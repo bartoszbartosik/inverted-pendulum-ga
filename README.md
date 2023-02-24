@@ -1,19 +1,19 @@
 # INVERTED PENDULUM CONTROL USING GENETIC ALGORITHM
 ## Welcome!
 
-This is a project implementing a genetic algorithm to determine parameters of an inverted pendulum controller.
-In other words - **the point is to keep inverted pendulum in a vertical upright position without knowing maths and physics behind it.**
+This project's purpose is to implement a genetic algorithm in order to determine parameters of an inverted pendulum full-state feedback controller $K$.
+In other words - **the point of this approach is to keep the pendulum in a vertical position at a predefined point without knowing maths and physics behind it.**
 
-The **main.py** file is the main file which you can execute in order to start a simulation and which contains basic system configuration
-where you can choose some inverted pendulum parameters as well as genetic algorithm's ones.
-You can also choose LQR controller in order to compare it with genetic algorithm controller.
-
-Ok, but let's see how does it actually work.
+The **main.py** file is the main file which you can execute in order to start a simulation and which contains a basic system configuration
+where you can choose some inverted pendulum parameters as well as the genetic algorithm ones.
+You can also choose LQR controller in order to compare it with genetic algorithm based controller.
 
 # System control
-Let's compare how does the genetic algorithm do its job in comparison to based on mathematical derivations LQR controller.
+Let's compare how the genetic algorithm does its job in comparison to based on mathematical derivations LQR controller.
 
-For that purpose, let's create some simulation scenario:
+For that purpose, let's create some simulation scenario with the system's initial conditions vector $\underline{x}$ a predefined reference values.
+
+$$\underline{x} = \begin{bmatrix}x_{0_1} \\ x_{0_2} \\ x_{0_3} \\ x_{0_4} \end{bmatrix}$$
 
 - Initial conditions:
   - position: 4 m,
