@@ -9,23 +9,15 @@ where you can choose some inverted pendulum parameters as well as the genetic al
 You can also choose LQR controller in order to compare it with genetic algorithm based controller.
 
 # System control
-Let's compare how the genetic algorithm does its job in comparison to based on mathematical derivations LQR controller.
+Let's compare how the genetic algorithm does its job in comparison to based on mathematical derivations LQR controller - for this purpose, let's create some simulation scenario with the system's initial conditions vector $\underline{x_0}$ and predefined reference values.
 
-For that purpose, let's create some simulation scenario with the system's initial conditions vector $\underline{x}$ a predefined reference values.
+## Initial conditions
 
-$$\underline{x} = \begin{bmatrix}x_{0_1} \\ x_{0_2} \\ x_{0_3} \\ x_{0_4} \end{bmatrix}$$
+Vector $\underline{x_0}$ stands for initial conditions of the inverted pendulum system. Its values correspond to the pendulum angle, pendulum angular velocity, cart position and a cart linear velocity, accordingly.
 
-- Initial conditions:
-  - position: 4 m,
-  - velocity: 0 m/s,
-  - angle: 30 deg,
-  - angular velocity: 0 deg/s.
-- Reference values:
-  - angle: 0 deg,
-  - position:
-    - from 0 s to 5 s:  0 m,
-    - from 5 s to 10 s: 0.8 m,
-    - from 10 s to 15 s: -0.5 m.
+```math
+\underline{x_0} = \begin{bmatrix}\theta_{0} \\ \omega_{0} \\ x_{0} \\ v_{0} \end{bmatrix} = \begin{bmatrix} 30^{\circ} \\ 1.74 \; \frac{rad}{s} \\ 3 \; m \\ -2 \; \frac{m}{s} \end{bmatrix} $$
+````
     
  Let's also choose some system's physical parameters:
 - Pendulum:
