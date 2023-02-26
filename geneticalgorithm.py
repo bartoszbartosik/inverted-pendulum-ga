@@ -71,3 +71,6 @@ class GeneticAlgorithm:
         self.individuals.append(self.population.fittest)
         self.values.append(self.population.fittest_val)
 
+    def copy(self):
+        return GeneticAlgorithm(self.objfunction, self.population.psize, self.population.isize, self.population.gbounds, self.population.mprobability,
+                 self.population.crossprobability, self.population.crossrate)

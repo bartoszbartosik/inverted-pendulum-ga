@@ -31,30 +31,35 @@ def main():
     g = -9.81   # [m/s^2]
 
     # PHYSICAL VARIABLES #
-    # b = [
-    #     [-180, -5, 1, 180],     # angle [deg]
-    #     [0.05, 0.05, 0.075, 0.05]          # friction [-]
-    # ]
+    b_v1 = [
+        [-180, -5, 1, 180],     # angle [deg]
+        [0.05, 0.05, 0.075, 0.05]          # friction [-]
+    ]
 
-    # B = [
-    #     [-2, -1.2, -0.8, 0, 1, 1.5, 5],     # position [m]
-    #     [0.1, 0.1, 0.05, 0.08, 0.1, 0.15, 0.1]          # friction [-]
-    # ]
+    b_v2 = [
+        [-180, -5, 1, 180],     # angle [deg]
+        [0.05, 0.05, 0.025, 0.05]          # friction [-]
+    ]
 
-    # B = [
-    #     [-2, -1.1, -0.9, -0.2, 0, 1, 1.2, 5],     # position [m]
-    #     [0.1, 0.1, 0.15, 0.1, 0.2, 0.1, 0.02, 0.1]          # friction [-]
-    # ]
+    B_v1 = [
+        [-2, -1.2, -0.8, 0, 1, 1.5, 5],     # position [m]
+        [0.1, 0.1, 0.05, 0.08, 0.1, 0.15, 0.1]          # friction [-]
+    ]
 
-    # m = [
-    #     [1, 3, 5, 8, 12, 15], # time [s]
-    #     [0.3, 0.25, 0.2, 0.3, 0.35, 0.3]  # mass [kg]
-    # ]
+    B_v2 = [
+        [-2, -1.1, -0.9, -0.2, 0, 1, 1.2, 5],     # position [m]
+        [0.1, 0.1, 0.15, 0.1, 0.2, 0.1, 0.02, 0.1]          # friction [-]
+    ]
 
-    # m = [
-    #     [2, 4, 8, 12, 15], # time [s]
-    #     [0.2, 0.3, 0.1, 0.5, 0.3]  # mass [kg]
-    # ]
+    m_v1 = [
+        [1, 3, 5, 8, 12, 15], # time [s]
+        [0.3, 0.25, 0.2, 0.3, 0.35, 0.3]  # mass [kg]
+    ]
+
+    m_v2 = [
+        [2, 4, 8, 12, 15], # time [s]
+        [0.2, 0.3, 0.1, 0.5, 0.3]  # mass [kg]
+    ]
 
     ######################
     # INITIAL CONDITIONS #
@@ -103,16 +108,16 @@ def main():
 
     #################
     # PLOT SETTINGS #
-    animate_plot = False
-    relative_path = "controller design/ga/var population size"
-    filename = "-multiplot-update"
+    animate_plot = True
+    relative_path = "controller design/ga"
+    filename = "-1000_iterations-update"
 
     filenameprefix = "/state[{};{};{};{}]-".format(th, dth, x, dx)
 
     ##############
     # CONTROLLER #
     # Choose either 'LQR' or 'GA'
-    controller = 'LQR'
+    controller = 'GAs'
 
     ##############################
     # LINEAR QUADRATIC REGULATOR #
@@ -173,15 +178,15 @@ def main():
         ga = GeneticAlgorithm(objective_function=objfunction,
                               population_size=20,
                               chromosome_size=4,
-                              gene_bounds=(0, 1000),
+                              gene_bounds=(0, 1000.01),
                               mutation_probability=0.2,
                               crossover_probability=0.4,
                               crossover_rate=0.2)
 
-        K_sol = ga.calculate(StopCondition.ITERATIONS, 100, save=True)
+        K_sol = ga.calculate(StopCondition.ITERATIONS, 1000, save=True)
 
-        ####################
-        # PLOT NAME PREFIX #
+        # ####################
+        # # PLOT NAME PREFIX #
         filenameprefix += "ga[psize{};mprob{};crossprob{};crossrate{};glower{};gupper{}]-k[{};{};{};{}]" \
             .format(ga.population.psize, ga.population.mprobability,
                     ga.population.crossprobability, ga.population.crossrate,
@@ -213,7 +218,7 @@ def main():
     # K_sol = [63.11, 18.3, 6.68, 9.35]   # nice result
     # K_sol = [83.72, 25.1, 10.98, 13.32]   # nice result
     # K_sol = [99.06222414, 23.29486085, 10.0, 13.66361755]   # LQR
-    # K_sol = [908.14, 269.05, 141.42, 169.24] # uber robust LQR
+    # K_sol = [908.14, 269.05, 141.42, 169.24] # uber dope LQR
 
     # K_sol = [57.45, 91.77, -0.38, 65.55]    # 1
     # K_sol = [76.88, 91.95, 2.92, 42.29]     # 5
@@ -223,10 +228,10 @@ def main():
     # K_sol = [98.07, 42.0, 13.78, 24.16]     # 75
 
     # VAR POPULATION SIZE #
-    K_PS_5 = [74.75, 24.76, 4.07, 14.5]
-    K_PS_10 = [85.15, 70.88, 15.06, 35.68]
-    K_PS_20 = [89.94, 20.16, 7.92, 13.65]
-    K_PS_50 = [55.69, 13.62, 5.36, 7.6]
+    K_PS_5 =    [74.75, 24.76, 4.07, 14.5]
+    K_PS_10 =   [85.15, 70.88, 15.06, 35.68]
+    K_PS_20 =   [89.94, 20.16, 7.92, 13.65]
+    K_PS_50 =   [55.69, 13.62, 5.36, 7.6]
 
     # VAR OBJECTIVE FUNCTION #
     K_TH            = [96.71, 24.68, -0.27, 17.62]
@@ -235,10 +240,13 @@ def main():
     K_X_TH_THLIM    = [99.51, 74.77, 11.75, 46.67]
 
     # VAR MUTATION PROBABILITY #
-    K_M01 = [91.13, 59.67, 13.03, 21.13]
-    K_M02 = [89.94, 20.16, 7.92, 13.65]
-    K_M04 = [99.66, 82.03, 10.92, 18.36]
-    K_M08 = [65.91, 20.02, 8.3, 11.21]
+    K_M001 = [98.73, 81.12, 6.26, 29.78]
+    K_M003 = [70.18, 18.5, 6.29, 10.75]
+    K_M006 = [87.05, 95.32, 14.85, 44.72]
+    K_M01 =  [77.34, 20.51, 7.02, 12.05]
+    K_M02 =  [89.94, 20.16, 7.92, 13.65]
+    K_M04 =  [99.66, 82.03, 10.92, 18.36]
+    K_M08 =  [65.91, 20.02, 8.3, 11.21]
 
     # VAR CROSSOVER PROBABILITY #
     K_CP01 = [94.32, 35.78, 14.8, 20.23]
@@ -260,6 +268,22 @@ def main():
     K_0_1000_0  = [776.0, 342.0, 165.0, 220.0]
 
 
+    # VAR PENDULUM'S FRICTION #
+    K_b_v1 = [93.91, 26.27, 12.98, 16.62]
+    K_b_v2 = [96.25, 52.28, 18.12, 19.27]
+
+    # VAR CART'S FRICTION #
+    K_B_v1 = [99.29, 33.97, 16.1, 19.13]
+    K_B_v2 = [84.82, 26.07, 12.7, 15.06]
+
+    # VAR PENDULUM'S MASS #
+    K_m_v1 = [78.96, 32.22, 7.36, 17.07]
+    K_m_v2 = [92.49, 29.5, 9.35, 16.26]
+
+
+    # 1000 ITERATIONS #
+    K_BEST = [972.0, 294.0, 214.0, 201.0]
+
     #######################################
     # CREATE REFERENCE INVERTED PENDULUMS #
     ref_ip_lqr = inverted_pendulum.copy()
@@ -268,15 +292,20 @@ def main():
     ref_ip2 = inverted_pendulum.copy()
     ref_ip3 = inverted_pendulum.copy()
     ref_ip4 = inverted_pendulum.copy()
-    ref_ip1.K = K_TH
-    ref_ip2.K = K_X
-    ref_ip3.K = K_X_TH_DXLIM
-    ref_ip4.K = K_X_TH_THLIM
+    ref_ip5 = inverted_pendulum.copy()
 
-    inverted_pendulum.K = K_sol
-    inverted_pendulum.calculate()
+    # ga_1 = ga.copy()
+    # ga_2 = ga.copy()
+    # ga_3 = ga.copy()
+    # ga_4 = ga.copy()
+    # ga_5 = ga.copy()
+
+    # inverted_pendulum.K = K_sol
+    # inverted_pendulum.calculate()
 
     plots = Plots()
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     # ref_ip1.K = K_TH
     # ref_ip2.K = K_X
@@ -290,19 +319,19 @@ def main():
     #                              labels=['LQR', 'f\u2081', 'f\u2082', 'f\u2083', 'f\u2084'],
     #                              linestyles=['--', '-', '-', '-', '-'])
 
-    ref_ip5 = inverted_pendulum.copy()
-    ref_ip1.K = K_100_100_2
-    ref_ip2.K = K_0_100_0
-    ref_ip3.K = K_0_100_1
-    ref_ip4.K = K_0_100_2
-    ref_ip5.K = K_0_1000_0
-    relative_path = "controller design/ga/var gene bounds"
-    plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
-                                 animate=animate_plot,
-                                 filename=relative_path+filenameprefix+filename,
-                                 references=[ref_ip_lqr, ref_ip1, ref_ip2, ref_ip3, ref_ip4, ref_ip5],
-                                 labels=['LQR', '-100.00 : 100.00', '0 : 100', '0.0 : 100.0', '0.00 : 100.00', '0 : 1000'],
-                                 linestyles=['--', '-', '-', '-', '-', '-'])
+    # ref_ip5 = inverted_pendulum.copy()
+    # ref_ip1.K = K_100_100_2
+    # ref_ip2.K = K_0_100_0
+    # ref_ip3.K = K_0_100_1
+    # ref_ip4.K = K_0_100_2
+    # ref_ip5.K = K_0_1000_0
+    # relative_path = "controller design/ga/var gene bounds"
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr, ref_ip1, ref_ip2, ref_ip3, ref_ip4, ref_ip5],
+    #                              labels=['LQR', '-100.00 : 100.00', '0 : 100', '0.0 : 100.0', '0.00 : 100.00', '0 : 1000'],
+    #                              linestyles=['--', '-', '-', '-', '-', '-'])
 
     # ref_ip1.K = K_M01
     # ref_ip2.K = K_M02
@@ -340,12 +369,194 @@ def main():
     #                              labels=['LQR', 'CR: 0.1', 'CR: 0.2', 'CR: 0.4', 'CR: 0.8'],
     #                              linestyles=['--', '-', '-', '-', '-'])
 
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\
+    # relative_path = "controller design/ga/var mutation probability/"
+    # filename = "-mutation_update"
+    #
+    # ga_1.population.mprobability = 0.01
+    # ga_2.population.mprobability = 0.03
+    # ga_3.population.mprobability = 0.06
+    # ga_4.population.mprobability = 0.1
+    # ga_5.population.mprobability = 0.2
+    #
+    # ref_ip1.K = ga_1.calculate(StopCondition.ITERATIONS, 100, save=True)
+    # filenameprefix = "ga[psize{};mprob{};crossprob{};crossrate{};glower{};gupper{}]-k[{};{};{};{}]" \
+    #     .format(ga_1.population.psize, ga_1.population.mprobability,
+    #             ga_1.population.crossprobability, ga_1.population.crossrate,
+    #             ga_1.population.gbounds[0], ga_1.population.gbounds[1],
+    #             round(ref_ip1.K[0], 2), round(ref_ip1.K[1], 2), round(ref_ip1.K[2], 2), round(ref_ip1.K[3], 2))
+    # plots.plot_ga_generations(geneticalgorithm=ga_1,
+    #                           filename=relative_path + filenameprefix + filename)
+    # plots.plot_inverted_pendulum(inverted_pendulum=ref_ip1,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename)
+    #
+    # ref_ip2.K = ga_2.calculate(StopCondition.ITERATIONS, 100, save=True)
+    # filenameprefix = "ga[psize{};mprob{};crossprob{};crossrate{};glower{};gupper{}]-k[{};{};{};{}]" \
+    #     .format(ga_2.population.psize, ga_2.population.mprobability,
+    #             ga_2.population.crossprobability, ga_2.population.crossrate,
+    #             ga_2.population.gbounds[0], ga_2.population.gbounds[1],
+    #             round(ref_ip2.K[0], 2), round(ref_ip2.K[1], 2), round(ref_ip2.K[2], 2), round(ref_ip2.K[3], 2))
+    # plots.plot_ga_generations(geneticalgorithm=ga_2,
+    #                           filename=relative_path + filenameprefix + filename)
+    # plots.plot_inverted_pendulum(inverted_pendulum=ref_ip2,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename)
+    #
+    # ref_ip3.K = ga_3.calculate(StopCondition.ITERATIONS, 100, save=True)
+    # filenameprefix = "ga[psize{};mprob{};crossprob{};crossrate{};glower{};gupper{}]-k[{};{};{};{}]" \
+    #     .format(ga_3.population.psize, ga_3.population.mprobability,
+    #             ga_3.population.crossprobability, ga_3.population.crossrate,
+    #             ga_3.population.gbounds[0], ga_3.population.gbounds[1],
+    #             round(ref_ip3.K[0], 2), round(ref_ip3.K[1], 2), round(ref_ip3.K[2], 2), round(ref_ip3.K[3], 2))
+    # plots.plot_ga_generations(geneticalgorithm=ga_3,
+    #                           filename=relative_path + filenameprefix + filename)
+    # plots.plot_inverted_pendulum(inverted_pendulum=ref_ip3,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename)
+    #
+    # ref_ip4.K = ga_4.calculate(StopCondition.ITERATIONS, 100, save=True)
+    # filenameprefix = "ga[psize{};mprob{};crossprob{};crossrate{};glower{};gupper{}]-k[{};{};{};{}]" \
+    #     .format(ga_4.population.psize, ga_4.population.mprobability,
+    #             ga_4.population.crossprobability, ga_4.population.crossrate,
+    #             ga_4.population.gbounds[0], ga_4.population.gbounds[1],
+    #             round(ref_ip4.K[0], 2), round(ref_ip4.K[1], 2), round(ref_ip4.K[2], 2), round(ref_ip4.K[3], 2))
+    # plots.plot_ga_generations(geneticalgorithm=ga_4,
+    #                           filename=relative_path + filenameprefix + filename)
+    # plots.plot_inverted_pendulum(inverted_pendulum=ref_ip4,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename)
+
+    # ref_ip5.K = K_M02
+    #
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr, ref_ip1, ref_ip2, ref_ip3, ref_ip4, ref_ip5],
+    #                              labels=['LQR', 'MP: 0.01', 'MP: 0.03', 'MP: 0.06', 'MP: 0.1', 'MP: 0.2'],
+    #                              linestyles=['--', '-', '-', '-', '-', '-'])\
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    # inverted_pendulum.b = b
+    # inverted_pendulum.B = B
+    # inverted_pendulum.m = m
+    # ref_ip_lqr.b = b
+    # ref_ip_lqr.B = B
+    # ref_ip_lqr.m = m
+    #
+    # inverted_pendulum.K = K_b_v1
+    # inverted_pendulum.b = b_v1
+    # ref_ip_lqr.b = inverted_pendulum.b
+    # relative_path = "alternative scenarios/var pendulums friction"
+    # filename = "-v1"
+    #
     # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
     #                              animate=animate_plot,
     #                              filename=relative_path+filenameprefix+filename,
     #                              references=[ref_ip_lqr],
     #                              labels=['LQR'],
     #                              linestyles=['--'])
+    # plots.plot_pendulum_friction(inverted_pendulum=inverted_pendulum,
+    #                              filename=relative_path+filenameprefix+filename)
+    #
+    # inverted_pendulum.K = K_b_v2
+    # inverted_pendulum.b = b_v2
+    # ref_ip_lqr.b = inverted_pendulum.b
+    # filename = "-v2"
+    #
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr],
+    #                              labels=['LQR'],
+    #                              linestyles=['--'])
+    # plots.plot_pendulum_friction(inverted_pendulum=inverted_pendulum,
+    #                              filename=relative_path+filenameprefix+filename)
+    #
+    # inverted_pendulum.b = b
+    # inverted_pendulum.B = B
+    # inverted_pendulum.m = m
+    # ref_ip_lqr.b = b
+    # ref_ip_lqr.B = B
+    # ref_ip_lqr.m = m
+    #
+    # inverted_pendulum.K = K_B_v1
+    # inverted_pendulum.B = B_v1
+    # ref_ip_lqr.B = inverted_pendulum.B
+    # relative_path = "alternative scenarios/var carts friction"
+    # filename = "-v1"
+    #
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr],
+    #                              labels=['LQR'],
+    #                              linestyles=['--'])
+    # plots.plot_cart_friction(inverted_pendulum=inverted_pendulum,
+    #                              filename=relative_path+filenameprefix+filename)
+    #
+    # inverted_pendulum.K = K_B_v2
+    # inverted_pendulum.B = B_v2
+    # ref_ip_lqr.B = inverted_pendulum.B
+    # filename = "-v2"
+    #
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr],
+    #                              labels=['LQR'],
+    #                              linestyles=['--'])
+    # plots.plot_cart_friction(inverted_pendulum=inverted_pendulum,
+    #                              filename=relative_path+filenameprefix+filename)
+    #
+    # inverted_pendulum.b = b
+    # inverted_pendulum.B = B
+    # inverted_pendulum.m = m
+    # ref_ip_lqr.b = b
+    # ref_ip_lqr.B = B
+    # ref_ip_lqr.m = m
+    #
+    # inverted_pendulum.K = K_m_v1
+    # inverted_pendulum.m = m_v1
+    # ref_ip_lqr.m = inverted_pendulum.m
+    # relative_path = "alternative scenarios/var pendulums mass"
+    # filename = "-v1"
+    #
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr],
+    #                              labels=['LQR'],
+    #                              linestyles=['--'])
+    # plots.plot_pendulum_mass(inverted_pendulum=inverted_pendulum,
+    #                              filename=relative_path+filenameprefix+filename)
+    #
+    # inverted_pendulum.K = K_m_v2
+    # inverted_pendulum.m = m_v2
+    # ref_ip_lqr.m = inverted_pendulum.m
+    # filename = "-v2"
+    #
+    # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+    #                              animate=animate_plot,
+    #                              filename=relative_path+filenameprefix+filename,
+    #                              references=[ref_ip_lqr],
+    #                              labels=['LQR'],
+    #                              linestyles=['--'])
+    # plots.plot_pendulum_mass(inverted_pendulum=inverted_pendulum,
+    #                              filename=relative_path+filenameprefix+filename)
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    inverted_pendulum.K = K_BEST
+    plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
+                                 animate=animate_plot,
+                                 filename=relative_path+filenameprefix+filename,
+                                 references=[ref_ip_lqr],
+                                 labels=['LQR'],
+                                 linestyles=['--'])
+
+    # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
     # plots.plot_inverted_pendulum(inverted_pendulum=inverted_pendulum,
     #                              animate=animate_plot,
