@@ -1,6 +1,6 @@
 from enum import Enum
 
-from population import Population
+from geneticalgorithm.population import Population
 
 
 class StopCondition(Enum):
@@ -28,7 +28,7 @@ class GeneticAlgorithm:
         self.individuals = []
         self.values = []
 
-    def calculate(self, stop_condition, stop_value, save):
+    def calculate(self, stop_condition, stop_value):
 
         if stop_condition == StopCondition.ITERATIONS:
             for i in range(stop_value):
@@ -39,14 +39,6 @@ class GeneticAlgorithm:
 
         print("SOLUTION: {}".format(self.individuals[self.values.index(max(self.values))].chromosome))
         print("VALUE: {}".format(max(self.values)))
-
-        if save:
-            file = open('results/ga.txt', 'a')
-            file.write('\nParameters: [psize: {}; mprob: {}; crossprob: {}; crossrate: {}]'
-                       .format(self.population.psize, self.population.mprobability, self.population.crossprobability,
-                               self.population.crossrate))
-            file.write('\niterations={}\nvalues={}\n'.format(self.iterations, self.values))
-            file.close()
 
         return self.individuals[self.values.index(max(self.values))].chromosome
 

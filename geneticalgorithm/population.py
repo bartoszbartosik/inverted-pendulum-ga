@@ -1,13 +1,8 @@
 import decimal
-import math
 import sys
 import random
-import threading
 
-import pathos.helpers
-import pathos.multiprocessing as mp
-
-from individual import Individual
+from geneticalgorithm.individual import Individual
 
 
 class Population:

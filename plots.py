@@ -6,9 +6,6 @@ from matplotlib.ticker import AutoMinorLocator
 from numpy import sin, cos, pi
 
 
-
-
-
 class Plots:
 
     #####################################
@@ -164,7 +161,7 @@ class Plots:
         if filename is None:
             filename = "plot"
         # SAVE FIGURE TO A FILE
-        plt.savefig('plots/{}.png'.format(filename))
+        plt.savefig('results/plots/{}.png'.format(filename))
 
         # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
@@ -305,7 +302,7 @@ class Plots:
 
             # SAVE ANIMATION AS GIF
             writergif = animation.PillowWriter(fps=len(t)/t_max)
-            anim.save("anims/{}.gif".format(filename), writer=writergif)
+            anim.save("results/anims/{}.gif".format(filename), writer=writergif)
 
     def plot_ga_generations(self, geneticalgorithm, filename):
         iterations = geneticalgorithm.iterations
@@ -324,7 +321,7 @@ class Plots:
         ax.set_ylabel('FITNESS')
         ax.grid(which='major')
         ax.grid(which='minor', lw='0.3')
-        plt.savefig('plots/{}-generations.png'.format(filename))
+        plt.savefig('results/plots/{}-generations.png'.format(filename))
 
     def plot_pendulum_friction(self, inverted_pendulum, filename):
 
@@ -351,7 +348,7 @@ class Plots:
         ax.set_ylabel('b [-]')
         ax.grid(which='major')
         ax.grid(which='minor', lw='0.3')
-        plt.savefig('plots/{}-friction.png'.format(filename))
+        plt.savefig('results/plots/{}-friction.png'.format(filename))
 
     def plot_cart_friction(self, inverted_pendulum, filename):
 
@@ -378,7 +375,7 @@ class Plots:
         ax.set_ylabel('B [-]')
         ax.grid(which='major')
         ax.grid(which='minor', lw='0.3')
-        plt.savefig('plots/{}-cart_friction.png'.format(filename))
+        plt.savefig('results/plots/{}-cart_friction.png'.format(filename))
 
     def plot_pendulum_mass(self, inverted_pendulum, filename):
 
@@ -405,7 +402,7 @@ class Plots:
         ax.set_ylabel('m [kg]')
         ax.grid(which='major')
         ax.grid(which='minor', lw='0.3')
-        plt.savefig('plots/{}-pendulum_mass.png'.format(filename))
+        plt.savefig('results/plots/{}-pendulum_mass.png'.format(filename))
 
     def plot_x_integral(self, inverted_pendulum, filename):
 
@@ -424,7 +421,7 @@ class Plots:
         ax.set_ylabel('X [m\u22C5s]')
         ax.grid(which='major')
         ax.grid(which='minor', lw='0.3')
-        plt.savefig('plots/{}-x_integral.png'.format(filename))
+        plt.savefig('results/plots/{}-x_integral.png'.format(filename))
 
     def plot_theta_integral(self, inverted_pendulum, filename):
 
@@ -443,4 +440,4 @@ class Plots:
         ax.set_ylabel('\u03F4 [rad\u22C5s]')
         ax.grid(which='major')
         ax.grid(which='minor', lw='0.3')
-        plt.savefig('plots/{}-theta_integral.png'.format(filename))
+        plt.savefig('results/plots/{}-theta_integral.png'.format(filename))
