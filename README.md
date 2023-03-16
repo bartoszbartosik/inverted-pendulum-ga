@@ -96,7 +96,7 @@ After several simulations, values leading to the best solutions with respect to 
 
 An objective function, being the most crucial genetic algorithm's parameter directly responsible for the evolution curve shape has been determined as follows:
 ```math
-f = \frac{t_{max}^{2}}{\int_{0}^{t_{max}} |x(t)| \,dt }
+f = \frac{t_{max}^{2}}{\int_{0}^{t_{max}} |x(t) - x_{des}(t)| \,dt }
 ```
 
 Why integral of a pendulum's angle to ensure staying in upright postion hasn't been included?
