@@ -1,4 +1,7 @@
-# INVERTED PENDULUM CONTROL USING GENETIC ALGORITHM
+<h1 align="center">
+INVERTED PENDULUM CONTROL USING GENETIC ALGORITHM
+</h1>
+
 ## Welcome!
 
 This project's purpose is to implement a genetic algorithm in order to determine parameters of an inverted pendulum full-state feedback controller $K$.
