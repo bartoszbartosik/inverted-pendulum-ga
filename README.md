@@ -142,3 +142,9 @@ Graph showing simulation outocomes for both approaches:
 
 Here the advantage of genetic algorithm based controller is less visible. The reason for such case is the probabilistic nature of this strategy - the solutions does not necessarily always have to converge to an actual objective function's minimum.
 
+## Conclusions
+The genetic algorithm can provide more reliable results when the model consists of additional non-linearities. However, provided more computational power to easily handle population size of 50 and gene range extended to 1000.0 performed for 1000 generations, the outcome of the genetic algorithm computations (GA) for a model WITHOUT extra non-linearities, in comparison to the LQR, looks like in the below graph:
+<p align="center"><img src="results/anims/controller design/ga/state[30.0;100.0;3.0;-2.0]-lqr[1;100;22500;5000]-k[808.95;232.76;150.0;171.76]-1000_iterations_multiplot-update.png" width="500" class="center"/></p>
+It means that even weak non-linearities, derived from the inverted pendulum physical model using only the II Newton's principle, are enough for the genetic algorithm to prove its advantage over linearized LQR approach.
+
+
