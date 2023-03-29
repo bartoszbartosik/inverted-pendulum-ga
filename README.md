@@ -108,7 +108,7 @@ Because simulation is terminated every time when pendulum's angle exceeds 90 deg
 The fittest individual of 100 generations:
 <p align="center"><img src="results/anims/controller design/ga/var mutation probability/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2]-k[89.94;20.16;7.92;13.65]-th_x_control_th90_limit.gif" width="500" class="center"/></p>
 
-## Conclusions
+### Summary
 The plot below shows comparison between the mathematically derived LQR and the genetic algorithm approach.
 <p align="center"><img src="results/plots/controller design/state[30.0;100.0;3.0;-2.0]-ga[psize20;mprob0.2;crossprob0.4;crossrate0.2;glower0;gupper100.01]-k[87.44;23.38;10.12;14.77]-comparison.png" width="500" class="center"/></p>
 
