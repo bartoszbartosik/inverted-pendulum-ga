@@ -1,0 +1,15 @@
+invertedpendulum:
+  pendulum:
+    length: 0.8         # [m]
+    mass: 0.3           # [kg]
+    friction: 0.05      # [kg/s]
+    max_ang: 9.0e+9     # [deg]
+    max_vel: 9.0e+9     # [deg/s]
+    max_acc: 9.0e+9     # [deg/s²]
+  cart:
+    mass: 0.6           # [kg]
+    friction: 0.1       # [1/s]
+    max_pos: 9.0e+9     # [m]
+    max_vel: 9.0e+9     # [m/s]
+    max_acc: 9.0e+9     # [m/s²]
+    max_force: 9.0e+9   # [N]
