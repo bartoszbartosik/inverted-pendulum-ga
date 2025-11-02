@@ -11,9 +11,9 @@ def main():
     # ------------------ #
 
     th = 30.0      # [deg]
-    dth = 100.0     # [deg/s]
+    dth = -50.0     # [deg/s]
     x = 3.0       # [m]
-    dx = -6.0     # [m/s]
+    dx = -3     # [m/s]
 
     # State vector
     state = np.array([th, dth, x, dx])
@@ -42,13 +42,17 @@ def main():
 
     K = inverted_pendulum.compute_lqr(*inverted_pendulum.compute_ss_matrices())
 
-    def force_func(th, dth, x, dx):
-        # return 0
-        return K[0] * th + K[1] * dth + K[2] * x + K[3] * dx
+    def lqr(th, dth, x, dx): return K[0] * th + K[1] * dth + K[2] * x + K[3] * dx
+    def null(th, dth, x, dx): return 0
 
-    t, state = inverted_pendulum.run(force_func)
-    save_solution_plot(t, state, x_ref)
-    # save_anim(t, state, x_ref)
+    t, state = inverted_pendulum.run(lqr)
+    save_solution_plot('lqr', t, state, x_ref)
+    save_anim('lqr', t, state, x_ref)
+
+    inverted_pendulum.set_state([*state[:-1], 0.0])
+    t, state = inverted_pendulum.run(null)
+    save_solution_plot('freefall', t, state, x_ref)
+    save_anim('freefall', t, state, x_ref)
 
 
 if __name__ == '__main__':

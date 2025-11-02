@@ -3,7 +3,7 @@ from matplotlib.patches import Rectangle
 from matplotlib.ticker import AutoMinorLocator
 from numpy import pi, sin, cos
 
-from invertedpendulum.config import CONFIGS_DIR
+from invertedpendulum.config import CONFIGS_DIR, EXPERIMENTS_DIR
 from invertedpendulum.util import read_config, get_value_for_interval
 
 
@@ -11,7 +11,7 @@ CONFIG = 'invertedpendulum'
 properties = read_config(CONFIGS_DIR / f"{CONFIG}.yaml")[CONFIG]
 
 
-def save_solution_plot(t, solution, x_ref: dict[tuple, float]):
+def save_solution_plot(filename, t, solution, x_ref: dict[tuple, float]):
 
     # Duration
     t_max = t[-1]
@@ -49,10 +49,10 @@ def save_solution_plot(t, solution, x_ref: dict[tuple, float]):
 
     __plot_state_variables(axth, axx, axdth, axdx, t, thsdeg, xs, dths, dxs, t_max, x_ref, linestyle, linewidth, color)
 
-    plt.savefig('test.png')
+    plt.savefig(EXPERIMENTS_DIR / f'{filename}.png')
 
 
-def save_anim(t, solution, x_ref: dict[tuple, float]):
+def save_anim(filename, t, solution, x_ref: dict[tuple, float]):
 
     # Duration
     t_max = t[-1]
@@ -185,7 +185,7 @@ def save_anim(t, solution, x_ref: dict[tuple, float]):
 
     # SAVE ANIMATION AS GIF
     writergif = animation.PillowWriter(fps=len(t) / t_max)
-    anim.save("test.gif", writer=writergif)
+    anim.save(EXPERIMENTS_DIR / f'{filename}.gif', writer=writergif)
 
 
 def __plot_state_variables(axth, axx, axdth, axdx, t, thsdeg, xs, dths, dxs, t_max, x_ref, linestyle, linewidth, color):
