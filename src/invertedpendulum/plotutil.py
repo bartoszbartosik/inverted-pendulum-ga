@@ -3,8 +3,8 @@ from matplotlib.patches import Rectangle
 from matplotlib.ticker import AutoMinorLocator
 from numpy import pi, sin, cos
 
-from invertedpendulum.config import CONFIGS_DIR, EXPERIMENTS_DIR
-from invertedpendulum.util import read_config, get_value_for_interval
+from .config import CONFIGS_DIR, EXPERIMENTS_DIR
+from .util import read_config, get_value_for_interval
 
 
 CONFIG = 'invertedpendulum'

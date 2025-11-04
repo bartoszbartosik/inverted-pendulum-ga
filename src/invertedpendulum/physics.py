@@ -7,8 +7,8 @@ from sympy.parsing.sympy_parser import parse_expr
 
 import control as ctrl
 
-from invertedpendulum.config import CONFIGS_DIR
-from invertedpendulum.util import read_config
+from .config import CONFIGS_DIR
+from .util import read_config
 
 
 class InvertedPendulumPhysics:

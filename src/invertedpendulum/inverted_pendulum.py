@@ -5,8 +5,8 @@ import numpy as np
 from scipy import integrate
 from numpy import pi
 
-from invertedpendulum.util import get_value_for_interval
-from src.invertedpendulum.physics import InvertedPendulumPhysics
+from .util import get_value_for_interval
+from .physics import InvertedPendulumPhysics
 
 
 class InvertedPendulum(InvertedPendulumPhysics):
