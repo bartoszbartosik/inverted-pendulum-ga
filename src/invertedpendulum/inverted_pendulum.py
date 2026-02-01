@@ -6,22 +6,22 @@ from scipy import integrate
 from numpy import pi
 
 from .util import get_value_for_interval
-from .physics import InvertedPendulumPhysics
+from .engine import IPEngine
 
 
-class InvertedPendulum(InvertedPendulumPhysics):
+class InvertedPendulum(IPEngine):
 
     def __init__(self, initial_state, desired_position: dict[tuple, float], duration):
         super().__init__()
 
         # Constraints
-        self.max_theta = self.properties['pendulum']['max_ang'] * pi / 180
-        self.max_dth = self.properties['pendulum']['max_vel']
-        self.max_ddth = self.properties['pendulum']['max_acc']
-        self.max_f = self.properties['cart']['max_force']
-        self.max_x = self.properties['cart']['max_pos']
-        self.max_dx = self.properties['cart']['max_vel']
-        self.max_ddx = self.properties['cart']['max_acc']
+        self.max_theta = self.properties.pendulum.max_ang
+        self.max_dth = self.properties.pendulum.max_vel
+        self.max_ddth = self.properties.pendulum.max_acc
+        self.max_f = self.properties.cart.max_force
+        self.max_x = self.properties.cart.max_pos
+        self.max_dx = self.properties.cart.max_vel
+        self.max_ddx = self.properties.cart.max_acc
         self.cart_width = 0.5 * self.L
         self.cart_height = 0.3 * self.cart_width
 
@@ -30,20 +30,24 @@ class InvertedPendulum(InvertedPendulumPhysics):
         dth = initial_state[1] * pi / 180
         x = initial_state[2]
         dx = initial_state[3]
-        self.state = [th, dth, x, dx]
+        self.state_0 = [th, dth, x, dx]
 
         # DESIRED POSITION
         self.x_ref = desired_position
 
-        # SIMULATION TIME
+        # SIMULATION PARAMETERS
         self.t_max = duration
         self.t_eval = np.linspace(0, self.t_max, num=self.t_max * 30)
+        self.__t = 0.0
+        self.__dt = self.t_eval[1] - self.t_eval[0]
+        self.state = np.array(self.state_0, dtype=float).copy()
+        self.t = [self.__t]
+        self.y = [self.state.copy()]
 
-
-    def run(self, force_function: Callable):
+    def step(self, force_function: Callable):
 
         # FUNCTION COMPUTING STATE VARIABLES VALUES IN A SINGLE TIMESTAMPS
-        def derivs(t, state):
+        def derivs(t_local, state):
 
             # Create array of zeros of a self.state size
             dsdt = np.zeros_like(state)
@@ -52,7 +56,7 @@ class InvertedPendulum(InvertedPendulumPhysics):
             th, dth, x, dx = state
 
             # Check the desired position
-            x0 = get_value_for_interval(t, self.x_ref)
+            x0 = get_value_for_interval(t_local, self.x_ref)
 
             # Calculate a value of force needed to stabilize the pendulum at a desired x0 position
             F = force_function(th, dth, x - x0, dx)
@@ -65,31 +69,38 @@ class InvertedPendulum(InvertedPendulumPhysics):
 
             return dsdt
 
-        # SIMULATION STOP CONDITION
-        def stop_event(t, state):
-            # If pendulum's angle is less than 90 deg, stop simulation
-            if abs(state[0]) > self.max_theta:
-                return 0
-            # If pendulum's angular velocity is out of bounds, stop simulation
-            elif abs(state[1]) > self.max_dth:
-                return 0
-            # If cart's position is out of bounds, stop simulation
-            elif abs(state[2]) > self.max_x:
-                return 0
-            # If cart's velocity is out of bounds, stop simulation
-            elif abs(state[3]) > self.max_dx:
-                return 0
-            # Otherwise keep performing it
-            else:
-                return 1
-
-        # If true, terminate integration after event occurs
-        stop_event.terminal = True
-
         # Solve pendulum's differential equation
-        sol = integrate.solve_ivp(derivs, method='BDF', y0=self.state, t_span=[0, self.t_max], t_eval=self.t_eval, events=stop_event)
+        t_next = min(self.__t + self.__dt, self.t_max)
+        sol = integrate.solve_ivp(
+            derivs,
+            method='BDF',
+            y0=self.state,
+            t_span=(self.__t, t_next),
+            max_step=self.__dt
+        )
+        y_next = sol.y[:, -1]
+        t_next = sol.t[-1]
 
-        return sol.t, sol.y
+        self.__t = t_next
+        self.state = y_next
+        self.t.append(t_next)
+        self.y.append(y_next)
+
+        return t_next, y_next
+
+
+    def run(self, force_function: Callable):
+        while self.__t < self.t_max:
+            self.step(force_function)
+
+        return np.array(self.t), np.stack(self.y, axis=1)
+
+
+    def reset(self):
+        self.__t = 0.0
+        self.state = np.array(self.state_0, dtype=float).copy()
+        self.t = [self.__t]
+        self.y = [self.state.copy()]
 
 
     def set_state(self, state):
@@ -97,4 +108,4 @@ class InvertedPendulum(InvertedPendulumPhysics):
         dth = state[1] * pi / 180
         x = state[2]
         dx = state[3]
-        self.state = [th, dth, x, dx]
+        self.state_0 = [th, dth, x, dx]

@@ -7,11 +7,10 @@ from sympy.parsing.sympy_parser import parse_expr
 
 import control as ctrl
 
-from .config import CONFIGS_DIR
-from .util import read_config
+from .properties import Properties
 
 
-class InvertedPendulumPhysics:
+class IPEngine:
     """
     Equation 1
     (I + m * L ^ 2 / 4) * ddth + m * g * L / 2 * sin(th) + b * dth = -m * L / 2 * ddx * cos(th)
@@ -27,21 +26,20 @@ class InvertedPendulumPhysics:
         #   R E A D   C O N F I G   #
         # ------------------------- #
 
-        self.CONFIG = 'invertedpendulum'
-        self.properties = read_config(CONFIGS_DIR / f"{self.CONFIG}.yaml")[self.CONFIG]
+        self.properties = Properties()
 
         # Pendulum's parameters
-        self.L = self.properties['pendulum']['length']
-        self.m = self.properties['pendulum']['mass']
-        self.b = self.properties['pendulum']['friction']
+        self.L = self.properties.pendulum.length
+        self.m = self.properties.pendulum.mass
+        self.b = self.properties.pendulum.friction
         self.I = 1 / 3 * self.m * self.L ** 2
 
         # Cart's parameters
-        self.M = self.properties['cart']['mass']
-        self.B = self.properties['cart']['friction']
+        self.M = self.properties.cart.mass
+        self.B = self.properties.cart.friction
 
         # Gravitational acceleration
-        self.G = -9.81
+        self.G = self.properties.G
 
 
         # ----------------------------------- #
@@ -177,7 +175,7 @@ class InvertedPendulumPhysics:
 
 
 if __name__ == '__main__':
-    x = InvertedPendulumPhysics()
+    x = IPEngine()
     k = x.compute_ss_matrices()
     j = x.compute_ss_matrices(symbolic=True)
     pass
